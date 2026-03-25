@@ -1,0 +1,9 @@
+id,product,status,price
+1,Laptop,completed,1000
+2,Phone,pending,500
+3,Tablet,completed,750
+4,Monitor,cancelled,300
+5,Keyboard,completed,100
+6,Mouse,completed,200
+7,Headphones,pending,150
+8,Webcam,completed,80

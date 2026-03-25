@@ -1,0 +1,4 @@
+INFO|2024-01-01|Server started
+ERROR|2024-01-02|Disk full
+INFO|2024-01-03|User logged in
+ERROR|2024-01-04|Out of memory

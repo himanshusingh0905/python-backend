@@ -1,0 +1,62 @@
+
+<style>
+  .box{border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:14px 16px;background:var(--color-background-primary)}
+  .q{font-size:14px;font-weight:500;color:var(--color-text-primary);margin-bottom:6px}
+  .sub{font-size:12px;color:var(--color-text-tertiary);line-height:1.6}
+  .arrow{text-align:center;font-size:18px;color:var(--color-text-tertiary);margin:4px 0}
+  .yes{background:#E1F5EE;border-color:#5DCAA5;border-radius:var(--border-radius-lg);padding:14px 16px}
+  .no{background:#FAECE7;border-color:#F0997B;border-radius:var(--border-radius-lg);padding:14px 16px}
+  .tag{display:inline-block;font-size:11px;padding:2px 9px;border-radius:20px;font-weight:500;margin-bottom:6px}
+</style>
+
+<div style="padding:1rem 0;max-width:520px;margin:0 auto">
+
+  <div class="box" style="border-color:#7F77DD;background:#EEEDFE;margin-bottom:8px">
+    <div style="font-size:13px;font-weight:500;color:#3C3489;margin-bottom:4px">Ask yourself this one question:</div>
+    <div style="font-size:16px;font-weight:500;color:#26215C">"Do I need to produce or process a sequence of items?"</div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
+    <div>
+      <div class="arrow">↓ yes</div>
+      <div class="yes">
+        <div class="tag" style="background:#9FE1CB;color:#04342C">use a generator</div>
+        <div style="font-size:13px;color:#085041;line-height:1.6">Output comes one item at a time. You process each item and move on. You don't need everything at once.</div>
+      </div>
+    </div>
+    <div>
+      <div class="arrow">↓ no</div>
+      <div class="no">
+        <div class="tag" style="background:#F5C4B3;color:#4A1B0C">just a regular function</div>
+        <div style="font-size:13px;color:#712B13;line-height:1.6">You need one single result. Compute it and return it. No sequence involved.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="box" style="margin-bottom:8px">
+    <div class="q">Then ask — is the data large or infinite?</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px">
+      <div style="padding:10px;background:#E1F5EE;border-radius:var(--border-radius-md)">
+        <div style="font-size:12px;font-weight:500;color:#085041;margin-bottom:3px">large / infinite / unknown</div>
+        <div style="font-size:12px;color:#0F6E56">generator is essential — don't load it all into RAM</div>
+      </div>
+      <div style="padding:10px;background:var(--color-background-secondary);border-radius:var(--border-radius-md)">
+        <div style="font-size:12px;font-weight:500;color:var(--color-text-primary);margin-bottom:3px">small / known size</div>
+        <div style="font-size:12px;color:var(--color-text-secondary)">generator still works, but a list is fine too</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="box">
+    <div class="q">Real signals in your code that scream "use a generator"</div>
+    <div style="margin-top:8px;display:flex;flex-direction:column;gap:6px">
+      <div style="font-size:13px;padding:7px 10px;background:var(--color-background-secondary);border-radius:var(--border-radius-md);color:var(--color-text-primary)">"I'm reading a big file line by line"</div>
+      <div style="font-size:13px;padding:7px 10px;background:var(--color-background-secondary);border-radius:var(--border-radius-md);color:var(--color-text-primary)">"I'm fetching pages from an API"</div>
+      <div style="font-size:13px;padding:7px 10px;background:var(--color-background-secondary);border-radius:var(--border-radius-md);color:var(--color-text-primary)">"I'm processing millions of DB rows"</div>
+      <div style="font-size:13px;padding:7px 10px;background:var(--color-background-secondary);border-radius:var(--border-radius-md);color:var(--color-text-primary)">"I need to insert data in batches"</div>
+      <div style="font-size:13px;padding:7px 10px;background:var(--color-background-secondary);border-radius:var(--border-radius-md);color:var(--color-text-primary)">"I'm building a data pipeline"</div>
+      <div style="font-size:13px;padding:7px 10px;background:var(--color-background-secondary);border-radius:var(--border-radius-md);color:var(--color-text-primary)">"I need an infinite sequence"</div>
+    </div>
+  </div>
+
+</div>
