@@ -1,0 +1,498 @@
+
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; }
+  .lecture { font-family: var(--font-sans); padding: 1rem 0; }
+  .nav { display: flex; gap: 6px; margin-bottom: 1.5rem; flex-wrap: wrap; }
+  .nav-btn {
+    padding: 7px 16px; border-radius: var(--border-radius-md);
+    border: 0.5px solid var(--color-border-secondary);
+    background: transparent; cursor: pointer;
+    font-size: 13px; font-weight: 400;
+    color: var(--color-text-secondary);
+    transition: all .15s;
+  }
+  .nav-btn.active {
+    background: var(--color-background-secondary);
+    color: var(--color-text-primary);
+    border-color: var(--color-border-primary);
+    font-weight: 500;
+  }
+  .section { display: none; }
+  .section.active { display: block; }
+  .concept-title { font-size: 20px; font-weight: 500; margin: 0 0 6px; color: var(--color-text-primary); }
+  .tagline { font-size: 14px; color: var(--color-text-secondary); margin: 0 0 1.5rem; line-height: 1.6; }
+  .cards { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 1.5rem; }
+  .card {
+    background: var(--color-background-secondary);
+    border-radius: var(--border-radius-lg); padding: 14px 16px;
+    border: 0.5px solid var(--color-border-tertiary);
+  }
+  .card-label { font-size: 11px; text-transform: uppercase; letter-spacing: .06em; color: var(--color-text-tertiary); margin-bottom: 6px; }
+  .card-text { font-size: 13px; color: var(--color-text-primary); line-height: 1.6; }
+  .viz-wrap { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 16px; margin-bottom: 1.5rem; }
+  .viz-title { font-size: 13px; font-weight: 500; margin-bottom: 12px; color: var(--color-text-secondary); }
+  canvas { width: 100%; display: block; }
+  .ctrl { display: flex; align-items: center; gap: 10px; margin-top: 12px; font-size: 13px; color: var(--color-text-secondary); }
+  .ctrl input[type=range] { flex: 1; }
+  .ctrl span { min-width: 60px; text-align: right; font-variant-numeric: tabular-nums; }
+  .pill {
+    display: inline-block; font-size: 11px; padding: 2px 10px;
+    border-radius: 20px; margin: 2px;
+    background: var(--color-background-info);
+    color: var(--color-text-info);
+    border: 0.5px solid var(--color-border-info);
+  }
+  .pill.warn { background: var(--color-background-warning); color: var(--color-text-warning); border-color: var(--color-border-warning); }
+  .pill.ok { background: var(--color-background-success); color: var(--color-text-success); border-color: var(--color-border-success); }
+  .pill.danger { background: var(--color-background-danger); color: var(--color-text-danger); border-color: var(--color-border-danger); }
+  .insight { border-left: 2px solid var(--color-border-info); padding: 10px 14px; background: var(--color-background-info); border-radius: 0 var(--border-radius-md) var(--border-radius-md) 0; margin-bottom: 1rem; font-size: 13px; color: var(--color-text-primary); line-height: 1.6; }
+  .ml-tag { font-size: 11px; font-weight: 500; color: var(--color-text-info); margin-bottom: 4px; }
+  .tog-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
+  .tog-btn { padding: 5px 12px; border-radius: var(--border-radius-md); border: 0.5px solid var(--color-border-secondary); background: transparent; cursor: pointer; font-size: 12px; color: var(--color-text-secondary); transition: all .15s; }
+  .tog-btn.on { background: var(--color-background-secondary); color: var(--color-text-primary); font-weight: 500; }
+  .hierarchy { display: flex; align-items: center; justify-content: center; gap: 8px; flex-wrap: wrap; padding: 1rem; }
+  .h-box { text-align: center; padding: 10px 14px; border-radius: var(--border-radius-md); border: 0.5px solid var(--color-border-tertiary); font-size: 13px; background: var(--color-background-secondary); min-width: 110px; }
+  .h-arrow { font-size: 16px; color: var(--color-text-tertiary); }
+  .status-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+  @media (max-width: 500px) { .cards { grid-template-columns: 1fr; } }
+</style>
+
+<div class="lecture">
+  <div class="nav">
+    <button class="nav-btn active" onclick="show('limits', this)">1. Limits</button>
+    <button class="nav-btn" onclick="show('continuity', this)">2. Continuity</button>
+    <button class="nav-btn" onclick="show('diff', this)">3. Differentiability</button>
+    <button class="nav-btn" onclick="show('connection', this)">How they connect</button>
+  </div>
+
+  <!-- ============ LIMITS ============ -->
+  <div class="section active" id="sec-limits">
+    <p class="concept-title">Limits — "What are you approaching?"</p>
+    <p class="tagline">A limit asks: as x gets closer and closer to some value, where does f(x) seem to be heading? You care about the <em>journey</em>, not whether you actually arrive.</p>
+
+    <div class="cards">
+      <div class="card">
+        <div class="card-label">Simple definition</div>
+        <div class="card-text">lim<sub>x→a</sub> f(x) = L means: the closer x gets to <em>a</em>, the closer f(x) gets to <em>L</em>. Even if f(a) is undefined or messy at the exact point.</div>
+      </div>
+      <div class="card">
+        <div class="card-label">Physical analogy</div>
+        <div class="card-text">Your car's speedometer shows 60 km/h. But "speed at an exact instant" means zero distance in zero time — 0/0 makes no sense. Limits are how we define it anyway by squeezing time intervals smaller and smaller.</div>
+      </div>
+    </div>
+
+    <div class="viz-wrap">
+      <div class="viz-title">Watch f(x) = sin(x)/x as x → 0</div>
+      <canvas id="c-limits" height="200"></canvas>
+      <div class="ctrl">
+        <span>x approaches 0</span>
+        <input type="range" id="sl-limit" min="1" max="99" value="50" oninput="drawLimit(this.value)">
+        <span id="lbl-limit">x = ?</span>
+      </div>
+      <div class="status-row" id="lim-status"></div>
+    </div>
+
+    <div class="insight">
+      <div class="ml-tag">WHY IT MATTERS FOR ML</div>
+      Derivatives in ML are literally defined using limits. When you compute how much the loss changes for a tiny change in weights, you are computing lim<sub>Δw→0</sub> [L(w+Δw) − L(w)] / Δw. Without limits, backpropagation has no mathematical foundation.
+    </div>
+
+    <div class="cards">
+      <div class="card">
+        <div class="card-label">Key insight</div>
+        <div class="card-text">sin(x)/x is undefined at x=0 (you'd get 0/0). But the limit as x→0 is exactly <strong>1</strong>. The function has a "hole" at x=0, yet it has a perfectly clear limit.</div>
+      </div>
+      <div class="card">
+        <div class="card-label">When limit doesn't exist</div>
+        <div class="card-text">If the function approaches different values from the left vs right side of a point, the limit doesn't exist. Like a cliff — coming from land or sea gives different "heights".</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ CONTINUITY ============ -->
+  <div class="section" id="sec-continuity">
+    <p class="concept-title">Continuity — "Can you draw it without lifting your pen?"</p>
+    <p class="tagline">A function is continuous at a point if: the limit exists there, the function is defined there, and both values actually agree. No jumps, no holes, no gaps.</p>
+
+    <div class="cards">
+      <div class="card">
+        <div class="card-label">Simple definition</div>
+        <div class="card-text">f is continuous at x=a if lim<sub>x→a</sub> f(x) = f(a). The value the function is approaching and the actual value at that point must be the same thing.</div>
+      </div>
+      <div class="card">
+        <div class="card-label">Physical analogy</div>
+        <div class="card-text">Imagine driving on a road. A continuous road = smooth, no potholes, no sudden teleportations. A discontinuous road = suddenly you're 2 metres to the left, or the road disappears entirely.</div>
+      </div>
+    </div>
+
+    <div class="viz-wrap">
+      <div class="viz-title">Compare different types of functions</div>
+      <div class="tog-row">
+        <button class="tog-btn on" onclick="setCont('cont', this)">Continuous</button>
+        <button class="tog-btn" onclick="setCont('jump', this)">Jump discontinuity</button>
+        <button class="tog-btn" onclick="setCont('hole', this)">Removable hole</button>
+        <button class="tog-btn" onclick="setCont('infty', this)">Infinite discontinuity</button>
+      </div>
+      <canvas id="c-cont" height="200"></canvas>
+      <div class="status-row" id="cont-status"></div>
+    </div>
+
+    <div class="insight">
+      <div class="ml-tag">WHY IT MATTERS FOR ML</div>
+      Neural network activation functions must be continuous (mostly). If your function jumps, your gradient signal breaks. Sigmoid, tanh, ReLU are all continuous. Step functions (used in old-school perceptrons) are not — which is exactly why they were replaced.
+    </div>
+
+    <div class="cards">
+      <div class="card">
+        <div class="card-label">Three conditions</div>
+        <div class="card-text">f is continuous at a if: (1) f(a) is defined, (2) the limit exists at a, (3) they're equal. Fail any one condition → discontinuous.</div>
+      </div>
+      <div class="card">
+        <div class="card-label">Real world example</div>
+        <div class="card-text">Temperature over time is continuous — it can't jump from 20°C to 50°C instantly. But a tax bracket system is discontinuous — earn ₹1 more and suddenly your rate changes by a step.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ DIFFERENTIABILITY ============ -->
+  <div class="section" id="sec-diff">
+    <p class="concept-title">Differentiability — "Is it smooth enough to have a unique slope?"</p>
+    <p class="tagline">A function is differentiable at a point if you can draw exactly one tangent line there — no sharp corners, no vertical walls. Differentiability is a stronger condition than continuity.</p>
+
+    <div class="cards">
+      <div class="card">
+        <div class="card-label">Simple definition</div>
+        <div class="card-text">f is differentiable at x=a if the derivative exists there: the function is smooth enough that you can define a unique slope (tangent line) at that exact point. No kinks.</div>
+      </div>
+      <div class="card">
+        <div class="card-label">Physical analogy</div>
+        <div class="card-text">A smooth rolling hill is differentiable everywhere — you can always find the slope at any point. A mountain with a sharp peak is <em>not</em> differentiable at the tip — from left you'd measure one slope, from right a different one.</div>
+      </div>
+    </div>
+
+    <div class="viz-wrap">
+      <div class="viz-title">Drag to see where tangent lines exist</div>
+      <div class="tog-row">
+        <button class="tog-btn on" onclick="setDiff('smooth', this)">Smooth curve (differentiable)</button>
+        <button class="tog-btn" onclick="setDiff('relu', this)">ReLU (corner at 0)</button>
+        <button class="tog-btn" onclick="setDiff('abs', this)">|x| (sharp corner)</button>
+      </div>
+      <canvas id="c-diff" height="220" style="cursor: crosshair;" onmousemove="moveDiff(event)" onmouseleave="resetDiff()"></canvas>
+      <div class="status-row" id="diff-status"></div>
+    </div>
+
+    <div class="insight">
+      <div class="ml-tag">WHY IT MATTERS FOR ML — THIS IS THE BIG ONE</div>
+      Gradient descent needs derivatives. If f is not differentiable at a point, gradient descent breaks down there. This is why we obsess over smooth activation functions. ReLU is technically not differentiable at 0 — we handle it by convention (subgradient). Smooth alternatives like GELU, Swish, and Mish were invented specifically to fix this.
+    </div>
+
+    <div class="cards">
+      <div class="card">
+        <div class="card-label">The strict rule</div>
+        <div class="card-text">Differentiable → Continuous. Always. But Continuous ≠ Differentiable. |x| is continuous everywhere but has a kink at x=0 where you can't define a unique slope.</div>
+      </div>
+      <div class="card">
+        <div class="card-label">What the derivative actually is</div>
+        <div class="card-text">The derivative at a point is the slope of the tangent line at that point. That slope tells you: if x increases by a tiny bit, by how much does f(x) change? That's your gradient.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ CONNECTION ============ -->
+  <div class="section" id="sec-connection">
+    <p class="concept-title">How the three concepts connect</p>
+    <p class="tagline">They form a hierarchy. Each stronger condition implies the weaker ones — but not the other way around.</p>
+
+    <div class="viz-wrap">
+      <div class="viz-title">The implication chain</div>
+      <div class="hierarchy">
+        <div class="h-box" style="border-color:var(--color-border-success); background:var(--color-background-success);">
+          <div style="font-weight:500; font-size:13px; color:var(--color-text-success);">Differentiable</div>
+          <div style="font-size:11px; color:var(--color-text-success); margin-top:3px;">Smooth slope everywhere</div>
+        </div>
+        <div class="h-arrow">⟹</div>
+        <div class="h-box" style="border-color:var(--color-border-info); background:var(--color-background-info);">
+          <div style="font-weight:500; font-size:13px; color:var(--color-text-info);">Continuous</div>
+          <div style="font-size:11px; color:var(--color-text-info); margin-top:3px;">No jumps or gaps</div>
+        </div>
+        <div class="h-arrow">⟹</div>
+        <div class="h-box" style="border-color:var(--color-border-warning); background:var(--color-background-warning);">
+          <div style="font-weight:500; font-size:13px; color:var(--color-text-warning);">Limit exists</div>
+          <div style="font-size:11px; color:var(--color-text-warning); margin-top:3px;">Approaches a value</div>
+        </div>
+      </div>
+      <p style="font-size:12px; color:var(--color-text-secondary); text-align:center; margin: 0 0 4px;">But the reverse is NOT guaranteed</p>
+    </div>
+
+    <div class="cards">
+      <div class="card">
+        <div class="card-label">Limit exists, but not continuous</div>
+        <div class="card-text">f(x) = sin(x)/x — limit exists at x=0 (equals 1), but f(0) is undefined. So not continuous. The limit "works" but the function has a hole.</div>
+      </div>
+      <div class="card">
+        <div class="card-label">Continuous, but not differentiable</div>
+        <div class="card-text">f(x) = |x| — perfectly continuous everywhere, including x=0. But at x=0 there's a sharp corner. Left slope = −1, right slope = +1. No unique tangent. Not differentiable there.</div>
+      </div>
+    </div>
+
+    <div class="insight">
+      <div class="ml-tag">THE ML SUMMARY</div>
+      Your tutor is teaching limits → continuity → differentiability in that order because <em>each concept builds on the one before</em>. In ML, you want your model functions to be differentiable (so gradient descent works), which means they must also be continuous (so no jumps in the loss surface), which means limits must exist everywhere (so the math is well-defined). Every activation function debate in deep learning — sigmoid vs tanh vs ReLU vs GELU — is secretly a debate about these three properties.
+    </div>
+
+    <div class="viz-wrap">
+      <div class="viz-title">Quick reference: common functions in ML</div>
+      <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; font-size:12px;">
+        <div style="text-align:center; font-weight:500; color:var(--color-text-secondary); padding-bottom:4px; border-bottom:0.5px solid var(--color-border-tertiary);">Function</div>
+        <div style="text-align:center; font-weight:500; color:var(--color-text-secondary); padding-bottom:4px; border-bottom:0.5px solid var(--color-border-tertiary);">Continuous?</div>
+        <div style="text-align:center; font-weight:500; color:var(--color-text-secondary); padding-bottom:4px; border-bottom:0.5px solid var(--color-border-tertiary);">Differentiable?</div>
+        ${[
+          ['Sigmoid', true, true],
+          ['Tanh', true, true],
+          ['ReLU', true, '⚠ At x=0'],
+          ['Step function', false, false],
+          ['GELU / Swish', true, true],
+          ['x² (quadratic)', true, true],
+        ].map(([name, cont, diff]) => `
+          <div style="padding:6px 0; border-bottom:0.5px solid var(--color-border-tertiary); color:var(--color-text-primary); text-align:center">${name}</div>
+          <div style="padding:6px 0; border-bottom:0.5px solid var(--color-border-tertiary); text-align:center">${cont === true ? '<span class="pill ok">Yes</span>' : '<span class="pill danger">No</span>'}</div>
+          <div style="padding:6px 0; border-bottom:0.5px solid var(--color-border-tertiary); text-align:center">${diff === true ? '<span class="pill ok">Yes</span>' : diff === false ? '<span class="pill danger">No</span>' : '<span class="pill warn">' + diff + '</span>'}</div>
+        `).join('')}
+      </div>
+    </div>
+
+    <button onclick="sendPrompt('Can you give me practice problems on limits, continuity, and differentiability for machine learning?')"
+      style="margin-top:8px; padding:9px 18px; border-radius:var(--border-radius-md); border:0.5px solid var(--color-border-secondary); background:transparent; cursor:pointer; font-size:13px; color:var(--color-text-primary);">
+      Give me practice problems ↗
+    </button>
+  </div>
+</div>
+
+<script>
+const isDark = matchMedia('(prefers-color-scheme:dark)').matches;
+const textColor = isDark ? 'rgba(220,218,210,0.85)' : 'rgba(40,40,38,0.85)';
+const gridColor = isDark ? 'rgba(255,255,255,0.07)' : 'rgba(0,0,0,0.07)';
+const axisColor = isDark ? 'rgba(255,255,255,0.3)' : 'rgba(0,0,0,0.3)';
+const lineBlue = '#378ADD';
+const lineAmber = '#EF9F27';
+const lineGreen = '#639922';
+const lineRed = '#E24B4A';
+
+function getCtx(id) {
+  const canvas = document.getElementById(id);
+  const dpr = window.devicePixelRatio || 1;
+  const rect = canvas.getBoundingClientRect();
+  const W = rect.width || canvas.parentElement.clientWidth || 560;
+  const H = parseInt(canvas.getAttribute('height'));
+  canvas.width = W * dpr;
+  canvas.height = H * dpr;
+  canvas.style.width = W + 'px';
+  canvas.style.height = H + 'px';
+  const ctx = canvas.getContext('2d');
+  ctx.scale(dpr, dpr);
+  ctx._W = W; ctx._H = H;
+  return ctx;
+}
+
+function drawAxes(ctx, xmin, xmax, ymin, ymax) {
+  const W = ctx._W, H = ctx._H;
+  const toX = x => (x - xmin)/(xmax - xmin) * W;
+  const toY = y => H - (y - ymin)/(ymax - ymin) * H;
+  ctx.strokeStyle = axisColor; ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(0, toY(0)); ctx.lineTo(W, toY(0)); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(toX(0), 0); ctx.lineTo(toX(0), H); ctx.stroke();
+  ctx.strokeStyle = gridColor; ctx.lineWidth = 0.5;
+  for(let x = Math.ceil(xmin); x <= xmax; x++) {
+    ctx.beginPath(); ctx.moveTo(toX(x), 0); ctx.lineTo(toX(x), H); ctx.stroke();
+  }
+  ctx.fillStyle = textColor; ctx.font = '10px sans-serif'; ctx.textAlign = 'center';
+  for(let x = Math.ceil(xmin); x <= xmax; x++) {
+    if(x===0) continue;
+    ctx.fillText(x, toX(x), toY(0)+13);
+  }
+  return {toX, toY};
+}
+
+function plotFunc(ctx, fn, xmin, xmax, toX, toY, color, lw, skip) {
+  ctx.strokeStyle = color; ctx.lineWidth = lw || 2; ctx.beginPath();
+  let started = false, steps = 400;
+  for(let i=0;i<=steps;i++) {
+    const x = xmin + i*(xmax-xmin)/steps;
+    if(skip && Math.abs(x-skip) < (xmax-xmin)/steps * 1.5) { started=false; continue; }
+    const y = fn(x);
+    if(!isFinite(y) || Math.abs(y)>100) { started=false; continue; }
+    if(!started) { ctx.moveTo(toX(x), toY(y)); started=true; }
+    else ctx.lineTo(toX(x), toY(y));
+  }
+  ctx.stroke();
+}
+
+// ---- LIMITS ----
+let limitMode = 50;
+function drawLimit(v) {
+  limitMode = v;
+  const ctx = getCtx('c-limits');
+  const W = ctx._W, H = ctx._H;
+  ctx.clearRect(0,0,W,H);
+  const xmin=-4, xmax=4, ymin=-0.4, ymax=1.4;
+  const {toX, toY} = drawAxes(ctx, xmin, xmax, ymin, ymax);
+  const sinc = x => Math.abs(x)<1e-10 ? 1 : Math.sin(x)/x;
+  plotFunc(ctx, sinc, xmin, xmax, toX, toY, lineBlue, 2.5, 0);
+  // hole at x=0
+  ctx.beginPath(); ctx.arc(toX(0), toY(1), 5, 0, Math.PI*2);
+  ctx.strokeStyle = lineBlue; ctx.lineWidth = 2; ctx.fillStyle = isDark ? '#1a1a18' : '#fff';
+  ctx.fill(); ctx.stroke();
+  // approaching dot
+  const t = (v/100);
+  const xval = (1-t)*3.5 + t*0.01;
+  const yval = sinc(xval);
+  const xval2 = -(1-t)*3.5 - t*0.01;
+  const yval2 = sinc(xval2);
+  ctx.fillStyle = lineAmber;
+  ctx.beginPath(); ctx.arc(toX(xval), toY(yval), 6, 0, Math.PI*2); ctx.fill();
+  ctx.beginPath(); ctx.arc(toX(xval2), toY(yval2), 6, 0, Math.PI*2); ctx.fill();
+  // vertical dashed lines
+  ctx.setLineDash([3,3]); ctx.strokeStyle = lineAmber; ctx.lineWidth=1;
+  ctx.beginPath(); ctx.moveTo(toX(xval), toY(yval)); ctx.lineTo(toX(xval), toY(0)); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(toX(xval2), toY(yval2)); ctx.lineTo(toX(xval2), toY(0)); ctx.stroke();
+  ctx.setLineDash([]);
+  // label
+  ctx.fillStyle = textColor; ctx.font='12px sans-serif'; ctx.textAlign='center';
+  ctx.fillText('sin(x)/x', toX(2.5), toY(0.6));
+  document.getElementById('lbl-limit').textContent = 'x = ±'+xval.toFixed(3);
+  const st = document.getElementById('lim-status');
+  if(v > 90) {
+    st.innerHTML = '<span class="pill ok">f(x) → 1 as x → 0</span><span class="pill">Limit = 1</span><span class="pill warn">f(0) is undefined!</span>';
+  } else {
+    st.innerHTML = '<span class="pill">f(x) ≈ '+sinc(xval).toFixed(4)+'</span><span class="pill">Getting closer to 1...</span>';
+  }
+}
+
+// ---- CONTINUITY ----
+let contMode = 'cont';
+function setCont(mode, btn) {
+  contMode = mode;
+  document.querySelectorAll('.tog-btn').forEach(b => {
+    if(b.closest('#sec-continuity')) b.classList.remove('on');
+  });
+  btn.classList.add('on');
+  drawCont();
+}
+function drawCont() {
+  const ctx = getCtx('c-cont');
+  const W = ctx._W, H = ctx._H;
+  ctx.clearRect(0,0,W,H);
+  const xmin=-4,xmax=4,ymin=-2,ymax=3;
+  const {toX, toY} = drawAxes(ctx, xmin,xmax,ymin,ymax);
+  const st = document.getElementById('cont-status');
+  if(contMode==='cont') {
+    plotFunc(ctx, x=>Math.sin(x)+0.5*x, xmin, xmax, toX, toY, lineGreen, 2.5);
+    ctx.fillStyle=textColor; ctx.font='12px sans-serif'; ctx.textAlign='center';
+    ctx.fillText('f(x) = sin(x) + 0.5x', toX(-2), toY(2.5));
+    st.innerHTML='<span class="pill ok">Continuous everywhere</span><span class="pill ok">No jumps, no holes</span><span class="pill ok">Limit = function value, always</span>';
+  } else if(contMode==='jump') {
+    plotFunc(ctx, x=>x<0?x:x+1.5, -4, 0, toX, toY, lineRed, 2.5);
+    plotFunc(ctx, x=>x<0?x:x+1.5, 0, 4, toX, toY, lineRed, 2.5);
+    // open/closed circles
+    ctx.beginPath(); ctx.arc(toX(0), toY(0), 5,0,Math.PI*2);
+    ctx.strokeStyle=lineRed; ctx.lineWidth=2; ctx.fillStyle=isDark?'#1a1a18':'#fff'; ctx.fill(); ctx.stroke();
+    ctx.beginPath(); ctx.arc(toX(0), toY(1.5), 5,0,Math.PI*2);
+    ctx.fillStyle=lineRed; ctx.fill();
+    ctx.fillStyle=textColor; ctx.font='12px sans-serif'; ctx.textAlign='center';
+    ctx.fillText('Jump at x=0', toX(0), toY(2.8));
+    st.innerHTML='<span class="pill danger">Jump discontinuity at x=0</span><span class="pill warn">Left limit ≠ right limit</span><span class="pill danger">Overall limit does not exist</span>';
+  } else if(contMode==='hole') {
+    const f = x=>Math.abs(x)<1e-10?99:(x*x-1)/(x-1);
+    plotFunc(ctx, f, xmin, xmax, toX, toY, lineAmber, 2.5, 1);
+    ctx.beginPath(); ctx.arc(toX(1), toY(2), 5,0,Math.PI*2);
+    ctx.strokeStyle=lineAmber; ctx.lineWidth=2; ctx.fillStyle=isDark?'#1a1a18':'#fff'; ctx.fill(); ctx.stroke();
+    ctx.fillStyle=textColor; ctx.font='12px sans-serif'; ctx.textAlign='center';
+    ctx.fillText('Hole at x=1 (limit exists = 2)', toX(0), toY(-1.5));
+    st.innerHTML='<span class="pill warn">Removable discontinuity at x=1</span><span class="pill ok">Limit exists (= 2)</span><span class="pill danger">f(1) is undefined</span>';
+  } else if(contMode==='infty') {
+    plotFunc(ctx, x=>1/x, -4, 0, toX, toY, lineBlue, 2.5, 0);
+    plotFunc(ctx, x=>1/x, 0, 4, toX, toY, lineBlue, 2.5, 0);
+    ctx.fillStyle=textColor; ctx.font='12px sans-serif'; ctx.textAlign='center';
+    ctx.fillText('f(x) = 1/x — explodes at 0', toX(2.5), toY(1.5));
+    st.innerHTML='<span class="pill danger">Infinite discontinuity at x=0</span><span class="pill danger">f(x)→+∞ from right</span><span class="pill danger">f(x)→−∞ from left</span>';
+  }
+}
+
+// ---- DIFFERENTIABILITY ----
+let diffMode = 'smooth', diffX = null;
+function setDiff(mode, btn) {
+  diffMode = mode;
+  document.querySelectorAll('.tog-btn').forEach(b => {
+    if(b.closest('#sec-diff')) b.classList.remove('on');
+  });
+  btn.classList.add('on');
+  drawDiff(null);
+}
+function getFn(mode) {
+  if(mode==='smooth') return x => 0.3*x*x - 0.1*x + 0.2;
+  if(mode==='relu') return x => Math.max(0, x);
+  if(mode==='abs') return x => Math.abs(x);
+}
+function getDeriv(mode, x) {
+  if(mode==='smooth') return 0.6*x - 0.1;
+  if(mode==='relu') return x>0?1:x<0?0:null;
+  if(mode==='abs') return x>0?1:x<0?-1:null;
+}
+function drawDiff(hoverXraw) {
+  const ctx = getCtx('c-diff');
+  const W = ctx._W, H = ctx._H;
+  ctx.clearRect(0,0,W,H);
+  const xmin=-3, xmax=3, ymin=-1, ymax=2.5;
+  const {toX, toY} = drawAxes(ctx, xmin,xmax,ymin,ymax);
+  const fn = getFn(diffMode);
+  plotFunc(ctx, fn, xmin, xmax, toX, toY, lineBlue, 2.5);
+  const st = document.getElementById('diff-status');
+  if(hoverXraw !== null) {
+    const x0 = xmin + hoverXraw*(xmax-xmin)/W;
+    const y0 = fn(x0);
+    const slope = getDeriv(diffMode, x0);
+    ctx.beginPath(); ctx.arc(toX(x0), toY(y0), 5,0,Math.PI*2);
+    ctx.fillStyle=lineAmber; ctx.fill();
+    if(slope !== null) {
+      const tx1 = xmin, tx2 = xmax;
+      const ty1 = y0 + slope*(tx1-x0), ty2 = y0 + slope*(tx2-x0);
+      ctx.beginPath(); ctx.moveTo(toX(tx1), toY(ty1)); ctx.lineTo(toX(tx2), toY(ty2));
+      ctx.strokeStyle=lineGreen; ctx.lineWidth=1.5; ctx.setLineDash([5,4]); ctx.stroke();
+      ctx.setLineDash([]);
+      st.innerHTML=`<span class="pill ok">x = ${x0.toFixed(2)}</span><span class="pill ok">slope = ${slope.toFixed(2)}</span><span class="pill ok">Differentiable here</span>`;
+    } else {
+      st.innerHTML=`<span class="pill danger">x ≈ 0 — sharp corner!</span><span class="pill danger">Left slope ≠ right slope</span><span class="pill danger">Not differentiable here</span>`;
+    }
+  } else {
+    let msg = '';
+    if(diffMode==='smooth') msg = '<span class="pill ok">Differentiable everywhere</span><span class="pill">Hover to see tangent line</span>';
+    else if(diffMode==='relu') msg = '<span class="pill ok">Differentiable everywhere except x=0</span><span class="pill warn">Corner at x=0 (slope = ?)</span><span class="pill">Hover near 0</span>';
+    else msg = '<span class="pill ok">Continuous everywhere</span><span class="pill danger">NOT differentiable at x=0</span><span class="pill">Hover near 0</span>';
+    st.innerHTML = msg;
+  }
+}
+function moveDiff(e) {
+  const canvas = document.getElementById('c-diff');
+  const rect = canvas.getBoundingClientRect();
+  const x = e.clientX - rect.left;
+  drawDiff(x);
+}
+function resetDiff() { drawDiff(null); }
+
+// ---- NAV ----
+function show(name, btn) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('sec-'+name).classList.add('active');
+  btn.classList.add('active');
+  setTimeout(() => {
+    if(name==='limits') drawLimit(limitMode);
+    if(name==='continuity') drawCont();
+    if(name==='diff') drawDiff(null);
+  }, 30);
+}
+
+// init
+setTimeout(()=>{ drawLimit(50); }, 50);
+</script>
